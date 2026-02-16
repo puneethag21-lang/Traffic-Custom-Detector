@@ -1,0 +1,31 @@
+from ultralytics import YOLO
+import cv2
+
+model_traffic = YOLO(r"C:\Users\ZOAI\Downloads\ml train\best.pt")      
+model_custom = YOLO(r"C:\Users\ZOAI\Downloads\best (1).pt")          
+
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+  
+    results_1 = model_traffic(frame, stream=True)
+    for r in results_1:
+        frame = r.plot() # Annotate frame with Model 1 detections
+
+   
+    results_2 = model_custom(frame, stream=True)
+    for r in results_2:
+        frame = r.plot() # Annotate frame with Model 2 detections
+
+    cv2.imshow("Multi-Model Detection", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
